@@ -1,0 +1,135 @@
+*{
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+   font-family: 'Noto Sans', sans-serif;
+}
+
+/* App.js CSS */
+
+.background-img{
+    width: 100%;
+    height: 20vh;
+    background :linear-gradient(#6B9AC4, #4059AD);
+}
+
+/* TodoArea.js CSS */
+
+.outer-box{
+    background-color: #eff2f1;
+    width: 50vw;
+    height: 70vh;
+    position: absolute;
+    top: 15vh;
+    right: 25vw;
+    box-shadow: 1px 1px 10px gray;
+}
+
+.app-name{
+    background : #97D8C4;
+    height: 10%;
+    padding: 15px;
+    font-family: 'Lato', sans-serif;
+    color: aliceblue;
+    text-shadow: 1px 1px 10px rgb(155, 150, 150);
+}
+
+.entry-field{
+    height: 10%;
+}
+
+.AreaForList{
+    height: 80%;
+}
+
+/* Entry Field CSS */
+
+.mainBox{
+    display: flex;
+    justify-content: center;
+}
+
+.field{
+    margin-top: 10px;
+    overflow: hidden;
+    width: 90%;
+    position: relative;
+}
+
+.enfield{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    border: 0.5px solid black;
+    padding: 5px 35px 5px 10px;
+}
+
+#updatefield{
+    width: 90%;
+}
+
+
+/* ListArea css */
+
+.ListingArea{
+    height: 100%;
+    width: 100%;
+    padding: 10px 0;
+    overflow: scroll;
+}
+
+/* EntryField & ListItem CSS */
+
+.buttonimg{
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 7px;
+    opacity: 0.6;
+}
+
+.buttonimg:hover{
+    opacity: 1;
+}
+
+
+/* listItems Css */
+
+.item-box{
+    position: relative;
+    width : 90%;
+    overflow: hidden;
+    min-height: 10%;
+    margin-left: 5%;
+    margin-bottom: 10px;
+    padding: 5px 20px 5px 10px;
+    font-size: smaller;
+    border-radius: 5px;
+}
+
+.delete{
+    top: 10px;
+}
+
+.update{
+    top : 12px;
+    right: 36px;
+}
+
+.item-box:nth-child(4n+1){
+    background-color: #F4B393;
+}
+
+.item-box:nth-child(4n+2){
+    background-color: #84BC9C;
+}
+
+.item-box:nth-child(4n+3){
+    background-color: #DDC67B;
+}
+
+.item-box:nth-child(4n+4){
+    background-color: #D8CFAF;
+}
