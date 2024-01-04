@@ -4,7 +4,7 @@ import updateButton from '../img/arrow.png'
 import cancelButton from '../img/cancel.png'
 import checkButton from '../img/check.png'
 import { deleteData, updateNewData } from '../redux/slice/todo'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 
 function ListItems(props) {
@@ -13,6 +13,7 @@ function ListItems(props) {
   const [updateData, setUpdateData] = useState("")
   const [id, setId] = useState("")
   const dispatch = useDispatch();
+  const {user} = useSelector((state)=>state.authReducer)
   
   const handleClick = (data)=>{
     setEditing(true);
@@ -23,10 +24,24 @@ function ListItems(props) {
   const updateNew = () =>{
     const newdata = {
       id,
-      updateData
+      updateData,
     }
     setEditing(false)
-    dispatch(updateNewData(newdata))
+    if(user){
+      const token = user.token
+      dispatch(updateNewData({newdata, token}))
+    }
+    
+  }
+
+  const deleteTask = ()=>{
+    const tok = user.token;
+    const id  = props.itemsArr._id;
+    const delObj = {
+      id,
+      tok
+    }
+    dispatch(deleteData(delObj));
   }
 
   const handleKeyPress = (event) =>{
@@ -49,7 +64,7 @@ function ListItems(props) {
                 <span style={{display : view}}>{props.itemsArr.taskName}</span>
                 <span style={{display : edit}}><input type="text" className='enfield' id='updatefield' value={updateData} onChange={(e)=>setUpdateData(e.target.value)} onKeyPress={handleKeyPress}/></span>
 
-                <img src={deleteButton} alt="delete" className='buttonimg delete' style={{display : view}} onClick={()=>dispatch(deleteData(props.itemsArr._id))}/>
+                <img src={deleteButton} alt="delete" className='buttonimg delete' style={{display : view}} onClick={deleteTask}/>
                 <img src={cancelButton} alt="cancel" className='buttonimg delete' style={{display : edit}} onClick={()=>setEditing(false)}/>
 
                 <img src={updateButton} alt="update" className='buttonimg update' style={{display : view}} onClick={()=>handleClick(props.itemsArr)}/>

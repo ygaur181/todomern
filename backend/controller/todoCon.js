@@ -3,7 +3,7 @@ const dbModel = require("../models/todoModel");
 
 const getAllTodos = async(req, res)=>{
     try {
-        const todos = await dbModel.find();
+        const todos = await dbModel.find({userId : req.user._id});
         res.status(200).json({
         success : true,
         todos
@@ -20,7 +20,9 @@ const updateTodo = async(req, res)=>{
         try{
             const todo = await dbModel.create({
                 "taskName" : req.body.taskName,
+                "userId" : req.user._id
             });
+            console.log(todo)
         
             res.status(201).json({
                 success : true,

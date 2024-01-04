@@ -1,39 +1,49 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const URL = "http://localhost:4001/api/v1/todo";
+const URL = "http://localhost:4000/api/v1/todo";
 
-export const fetchedData = createAsyncThunk('fetchdata', async()=>{
-    const data = (await fetch(URL)).json();
+export const fetchedData = createAsyncThunk('fetchdata', async(token)=>{
+    const data = (await fetch(URL, {
+        headers : {
+            "authorization" : `Bearer ${token}`
+        }
+    })).json();
     return data;
 })
 
-export const postData = createAsyncThunk('postData', async(task)=>{
+export const postData = createAsyncThunk('postData', async(postData)=>{
+    const {entry, token} = postData;
     const data = await fetch(URL, {
         method : "POST",
         headers : {
-                "Content-Type" : "application/json"
+                "Content-Type" : "application/json",
+                "authorization" : `Bearer ${token}`
         },
         body : JSON.stringify({
-                "taskName" : task
+                "taskName" : entry
         })
     }).json();
-    console.log(data)
     return data;
 })
 
-export const deleteData = createAsyncThunk('deleteData', async(id)=>{
+export const deleteData = createAsyncThunk('deleteData', async(deleteObj)=>{
+    const {id, tok} = deleteObj;
     const data = await fetch(`${URL}/${id}`, {
         method : "DELETE",
+        headers : {
+            "authorization" : `Bearer ${tok}`
+        }
     })
     return data;
 })
 
 
-export const updateNewData = createAsyncThunk('updateData', async(newdata)=>{
+export const updateNewData = createAsyncThunk('updateData', async({newdata, token})=>{
     const data = await fetch(`${URL}update/${newdata.id}`, {
         method : "PUT",
         headers : {
-                "Content-Type" : "application/json"
+                "Content-Type" : "application/json",
+                "authorization" : `Bearer ${token}`
         },
         body : JSON.stringify({
                 "taskName" : newdata.updateData
@@ -62,7 +72,7 @@ const todoSlice = createSlice({
         })
         .addCase(fetchedData.rejected, (state, action)=>{
             state.isLoading = false
-            state.data = action.payload
+            state.data = null
             state.isError = true
         })
         .addCase(postData.pending, (state, action)=>{

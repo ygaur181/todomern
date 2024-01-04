@@ -6,11 +6,15 @@ import { fetchedData } from '../redux/slice/todo';
 function ListArea() {
 
   const dispatch = useDispatch();
+  const { user } = useSelector((state)=>state.authReducer);
   const {isUpdating, data} = useSelector((state)=>state.todoReducer);
 
   useEffect(()=>{
-    dispatch(fetchedData());
-  },[dispatch, isUpdating])
+    if(user){
+      const tok = user.token;
+      dispatch(fetchedData(tok))
+    }
+  },[dispatch, isUpdating, user])
 
 if(data){
   return (

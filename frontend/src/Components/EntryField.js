@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import addButton from '../img/check.png'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { postData } from '../redux/slice/todo';
 
 function EntryField() {
   const [entry, setEntry] = useState("");
+  const {user} = useSelector((state)=>state.authReducer)
   const dispatch = useDispatch();
 
   // code for making enter submit code 
@@ -16,7 +17,11 @@ function EntryField() {
   }
 
   const handleClick =()=>{
-    dispatch(postData(entry));
+    if(user){
+      const token = user.token
+      const posting = {entry, token}
+      dispatch(postData(posting));
+    }
     setEntry("");
   }
 

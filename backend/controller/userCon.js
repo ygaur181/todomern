@@ -1,38 +1,100 @@
 const userModel = require("../models/userModel");
-const { generateToken } = require("../utils/jwt");
+const bcrypt = require("bcrypt");
+const validator = require("validator");
+const jwt = require("jsonwebtoken");
 
+const createToken = (id)=>{
+    const token = jwt.sign({id}, process.env.SECRET);
+    return token;
+}
+
+// SignUp User
 const createUser = async(req, res)=>{
     try {
-        const {name, email, phone, password} = req.body;
-
+        const {email, password, confirm} = req.body;
         
-        if(!name, !email, !phone, !password){
-            return res.status(401).json({
-                success:false,
-                error:"Bad Request"
-            })
+        if(!email, !password, !confirm){
+            throw Error("Fill all the fields")
         }
 
-        const data = await userModel.create({
-            "name" : name,
+        if(!validator.isEmail(email)){
+            throw Error("Enter right email")
+        }
+
+        if(!validator.isStrongPassword(password)){
+            throw Error("Enter a strong password");
+        }
+
+        if(password != confirm){
+            throw Error("Password and Confirm Password not matched")
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const newPass = await bcrypt.hash(password, salt);
+
+        const dataObj = {
             "email" : email,
-            "phone" : phone,
-            "password" : password
-        })
-        const token = generateToken(data._id);
+            "password" : newPass
+        }
+
+        const data = await userModel.create(dataObj);
+        const token = createToken(data._id);
         
         return res.status(201).json({
             success : true,
-            token,
-            data
+            email,
+            token
         })
+
     } catch (error) {
-        return res.status(500).json({
+        return res.status(501).json({
             success : false,
             err : error.message
         })
     }
 }
+
+
+// login User 
+const loginUser = async(req, res)=>{
+    try {
+        const {email, password} = req.body;
+    
+        
+        if(!email, !password){
+            throw Error("Fill all the fields")
+        }
+ 
+        const loginData = await userModel.findOne({email});
+    
+        if(loginData){
+            const isValid = await bcrypt.compare(password, loginData.password)
+            if(isValid){
+                const token = createToken(loginData._id);
+                res.status(200).json({
+                    success : true,
+                    email,
+                    token
+                })
+            }
+            else{
+                throw Error("Cridentials are not correct");
+            }
+        }
+        else{
+            throw Error("Cridentials are not correct");
+        }
+        
+    } catch (error) {
+        res.status(501).json({
+            success : false,
+            err : error.message
+        })
+    }
+}
+
+
+//under construction
 
 const viewUser = async(req, res)=>{
     try {
@@ -94,54 +156,6 @@ const deleteUser = async(req, res)=>{
             err : error.message
         })
     }
-}
-
-const loginUser = async(req, res)=>{
-   try {
-
-    const {email, password} = req.body;
-
-      
-    if(!email, !password){
-        return res.status(401).json({
-            success:false,
-            error:"Bad Request"
-        })
-    }
-
-    const loginData = await userModel.findOne({email});
-
-    if(loginData){
-      
-      
-        if(loginData.password == password){
-            const token = generateToken(loginData._id);
-            const data={
-                name:loginData.name,
-                email:loginData.email,
-                phone:loginData.phone
-            }
-            return res.status(200).json({
-                success : true,
-                data,
-                token,
-            })
-        }
-        else{
-            res.status(404).json({
-                status : false,
-                err : "cridential not matched"
-            })
-        }
-    }
-    else{
-        res.status(404).json({
-            success : false,
-            err : "email is wrong"
-        })
-    }
-   } catch (error) {
-   }
 }
 
 

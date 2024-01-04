@@ -1,55 +1,27 @@
-import React, {useState} from 'react'
+import React, { useEffect } from 'react'
 import EntryField from './EntryField'
 import ListArea from './ListArea'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 function TodoArea() {
-  const [todoList, setTodoList] = useState([
-    {
-      id: "1",
-      str : "I will do something"
-    },
-    {
-      id : "2",
-      str : "What i will do?"
-    },
-    {
-      id : "3",
-      str : "Tomorrow i have to go on walk"
+  const {user} = useSelector((state)=>state.authReducer);
+  const navigate = useNavigate();
+  useEffect(()=>{
+    if(!user){
+      navigate("/")
     }
-  ])
-
-  const [inputValue, setInputValue] = useState("");
-
-  const changeInput = (e) =>{
-    setInputValue(e.target.value);
-  }
-
-  const addItem = () =>{
-    const item = {
-      id : 4,
-      str : inputValue
-    }
-    todoList.push(item);
-    setTodoList(todoList);
-    setInputValue("")
-  }
-
-  const deleteIt = (id) =>{
-    const todos = todoList.filter((item) =>{
-      return item.id !== id;
-    })
-    setTodoList(todos)
-  }
-
+  },[navigate, user])
+  
   return (
     <>
         <div className="outer-box">
             <div className='app-name'>Todo List</div>
             <div className="entry-field">
-              <EntryField inputV = {inputValue} setInputV = {changeInput} addItem = {addItem}/>
+              <EntryField/>
             </div>
             <div className="AreaForList">
-              <ListArea itemArr = {todoList} deleteIt = {deleteIt}/>
+              <ListArea/>
             </div>
         </div>
         
