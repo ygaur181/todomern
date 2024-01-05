@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-const URL = "http://localhost:4000/api/auth"
+const URL = "/api/auth"
 
 export const signUp = createAsyncThunk('signUp', async({email, password, confirmP}, {rejectWithValue})=>{
     const obj = {

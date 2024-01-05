@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { signIn } from '../../redux/slice/auth';
@@ -17,10 +17,12 @@ function Login() {
     dispatch(signIn({email, password}));
   }
 
-  if(user){
-    localStorage.setItem("user",JSON.stringify(user));
-    navigate("/todo");
-  }
+  useEffect(()=>{
+    if(user){
+      localStorage.setItem("user",JSON.stringify(user));
+      navigate("/todo");
+    }
+  },[navigate, user])
 
   return (
     <div className='authform'>

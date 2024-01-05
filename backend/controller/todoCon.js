@@ -22,7 +22,6 @@ const updateTodo = async(req, res)=>{
                 "taskName" : req.body.taskName,
                 "userId" : req.user._id
             });
-            console.log(todo)
         
             res.status(201).json({
                 success : true,

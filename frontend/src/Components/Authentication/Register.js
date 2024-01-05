@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { signUp } from '../../redux/slice/auth';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate} from 'react-router-dom'
@@ -18,13 +18,14 @@ function Register() {
     dispatch(signUp(obj));
   }
 
-  if(user){
-    localStorage.setItem("user", JSON.stringify(user));
-    navigate("/todo");
-  }
+  useEffect(()=>{
+    if(user){
+      localStorage.setItem("user", JSON.stringify(user));
+      navigate("/todo");
+    }
+  },[navigate, user]);
 
-
-    return (
+  return (
       <div className='authform'>
           <form onSubmit={handleSubmit}>
               <input type="email" placeholder='Email' value={email} onChange={(e)=>setEmail(e.target.value)}/><br />

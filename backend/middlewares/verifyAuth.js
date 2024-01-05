@@ -15,7 +15,6 @@ const verifyAuth = async(req, res, next)=>{
     try {
         const {id} = jwt.verify(token, process.env.SECRET);
         req.user = await userModel.findOne({_id : id});
-        console.log(req.user)
         next();
 
     } catch (error) {

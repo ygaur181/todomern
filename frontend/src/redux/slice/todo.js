@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const URL = "http://localhost:4000/api/v1/todo";
+const URL = "/api/v1/todo";
 
 export const fetchedData = createAsyncThunk('fetchdata', async(token)=>{
     const data = (await fetch(URL, {
