@@ -24,7 +24,4 @@ app.get("/*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
   });
 
-const PORT = process.env.PORT;
-app.listen(PORT, ()=>{
-    console.log(`port connected at ${PORT}`);
-});
+module.exports = app;
